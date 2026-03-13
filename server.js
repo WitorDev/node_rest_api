@@ -1,10 +1,68 @@
 const express = require("express");
 const app = express();
 
+const methodOverride = require("method-override");
+
 const PORT = 3000;
 
+let products = [
+  {
+    name: "Banana",
+    price: 200,
+    id: 1,
+  },
+  {
+    name: "Chinelo",
+    price: 2,
+    id: 2,
+  },
+  {
+    name: "Cachorro dos Himalaias",
+    price: 120,
+    id: 3,
+  },
+  {
+    name: "Ônibus Federal do Maranhão",
+    price: 15460,
+    id: 4,
+  },
+];
+
+// middleware
+app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(methodOverride("_method"));
+
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.render("index");
+});
+
+app.get("/products", (req, res) => {
+  res.render("products", { products });
+});
+
+app.get("/produto/:id", (req, res) => {
+  let product = products.find((p) => p.id == req.params.id);
+  res.render("product", { product });
+});
+
+app.post("/produto", (req, res) => {
+  const { name, price } = req.body;
+  const id = products.length - 1;
+
+  products.push({ name, price, id });
+
+  res.render("products", { products });
+});
+
+app.delete("/produto/:id", (req, res) => {
+  const { id } = req.params;
+
+  products = products.filter((product) => product.id != id);
+
+  res.render("products", { products });
 });
 
 app.listen(PORT, () => {

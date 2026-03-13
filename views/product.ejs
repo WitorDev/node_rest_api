@@ -1,0 +1,30 @@
+<%- include("partials/header.ejs") %>
+
+<div>
+  <h1>Lista de Produtos</h1>
+
+  <table border="1">
+    <form action="/produto/<%= product.id %>?_method=DELETE" method="POST">
+      <button type="submit">Delete</button>
+    </form>
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Preço</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= product.id %></td>
+        <td>
+          <a href="<%= '/produto/' + product.id %>"> <%= product.name %> </a>
+        </td>
+        <td>R$ <%= product.price %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>
