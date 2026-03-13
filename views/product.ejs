@@ -21,7 +21,7 @@
         <td>
           <a href="<%= '/produto/' + product.id %>"> <%= product.name %> </a>
         </td>
-        <td>R$ <%= product.price %></td>
+        <td>R$ <%= product.price.toFixed(2) %></td>
       </tr>
     </tbody>
   </table>

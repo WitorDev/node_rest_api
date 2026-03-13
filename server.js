@@ -50,9 +50,22 @@ app.get("/produto/:id", (req, res) => {
 
 app.post("/produto", (req, res) => {
   const { name, price } = req.body;
-  const id = products.length - 1;
+  const id = products.length;
+  let message = "";
 
-  products.push({ name, price, id });
+  const formattedPrice = parseFloat(price);
+
+  if (name.length < 1) {
+    message = "Favor inserir um nome de produto com mais caracteres do que um.";
+    return res.render("message", { message });
+  }
+
+  if (formattedPrice < 0 || isNaN(formattedPrice)) {
+    message = "Favor inserir um valor de produto maior do que 0.";
+    return res.render("message", { message });
+  }
+
+  products.push({ name, price: formattedPrice, id });
 
   res.render("products", { products });
 });
