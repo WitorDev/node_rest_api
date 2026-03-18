@@ -3,7 +3,7 @@
 <div>
   <h1>Criar Produto</h1>
 
-  <form action="/produto" method="POST">
+  <form action="/product" method="POST">
     <div>
       <label for="name">Nome:</label>
       <input type="text" name="name" id="name" required>
@@ -37,7 +37,7 @@
         <tr>
           <td><%= product.id %></td>
           <td>
-            <a href="<%= '/produto/' + product.id %>">
+            <a href="<%= '/product/' + product.id %>">
               <%= product.name %>
             </a>
           </td>

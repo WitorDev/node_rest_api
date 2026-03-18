@@ -1,10 +1,58 @@
 <%- include("partials/header.ejs") %>
+
 <div>
   <h1>Loja UniFil</h1>
   <p>Bem vindo à lojinha UniFil!</p>
 
+  <form action="/products/search" method="GET">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search products..."
+      value="<%= query || '' %>"
+    />
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (products && products.length > 0 && query) { %>
+
+    <h3>
+      <%= query ? `Resultados para "${query}"` : "Produtos" %>
+    </h3>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Preço</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.id %></td>
+            <td>
+              <a href="/product/<%= product.id %>">
+                <%= product.name %>
+              </a>
+            </td>
+            <td>R$ <%= product.price.toFixed(2) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  <% } else if (query) { %>
+
+    <p>Nenhum produto encontrado...</p>
+
+  <% } %>
+
   <a href="/products">
-    <button>Ver Produtos</button>
+    <button type="button">Ver Produtos</button>
   </a>
 </div>
+
 <%- include("partials/footer.ejs") %>

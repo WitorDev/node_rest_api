@@ -2,53 +2,47 @@ const express = require("express");
 const app = express();
 
 const methodOverride = require("method-override");
+require("dotenv").config();
 
-const PORT = 3000;
+// data
+let products = require("./data/productsData");
 
-let products = [
-  {
-    name: "Banana",
-    price: 200,
-    id: 1,
-  },
-  {
-    name: "Chinelo",
-    price: 2,
-    id: 2,
-  },
-  {
-    name: "Cachorro dos Himalaias",
-    price: 120,
-    id: 3,
-  },
-  {
-    name: "Ônibus Federal do Maranhão",
-    price: 15460,
-    id: 4,
-  },
-];
+// open port
+const PORT = process.env.PORT;
 
 // middleware
 app.set("view engine", "ejs");
-
 app.use(express.urlencoded({ extended: true }));
-
 app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", { products, query: "" });
 });
 
 app.get("/products", (req, res) => {
   res.render("products", { products });
 });
 
-app.get("/produto/:id", (req, res) => {
+app.get("/products/search", (req, res) => {
+  const q = req.query.q;
+
+  if (!q || typeof q !== "string") {
+    return res.redirect("/");
+  }
+
+  const results = products.filter((p) =>
+    p.name.toLowerCase().includes(q.toLowerCase()),
+  );
+
+  return res.render("index", { products: results, query: q });
+});
+
+app.get("/product/:id", (req, res) => {
   let product = products.find((p) => p.id == req.params.id);
   res.render("product", { product });
 });
 
-app.post("/produto", (req, res) => {
+app.post("/product", (req, res) => {
   const { name, price } = req.body;
   const id = products.length;
   let message = "";
@@ -70,7 +64,7 @@ app.post("/produto", (req, res) => {
   res.render("products", { products });
 });
 
-app.delete("/produto/:id", (req, res) => {
+app.delete("/product/:id", (req, res) => {
   const { id } = req.params;
 
   products = products.filter((product) => product.id != id);
@@ -78,7 +72,14 @@ app.delete("/produto/:id", (req, res) => {
   res.render("products", { products });
 });
 
+// listen method
 app.listen(PORT, () => {
   console.log("Running server in port " + PORT + ".");
   console.log("Link: http://localhost:" + PORT);
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  if (res.headersSent) return next(err);
+  res.status(500).send("Internal Server Error");
 });
