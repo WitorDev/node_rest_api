@@ -66,7 +66,7 @@ app.post("/product", (req, res) => {
   }
 
   const newProduct = {
-    id: Date.now(),
+    id: products.length + 1,
     name: name.trim(),
     price: formattedPrice,
   };
