@@ -4,15 +4,13 @@ const app = express();
 const methodOverride = require("method-override");
 require("dotenv").config();
 
-// data
 let products = require("./data/productsData");
 
-// open port
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-// middleware
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
@@ -38,48 +36,73 @@ app.get("/products/search", (req, res) => {
 });
 
 app.get("/product/:id", (req, res) => {
-  let product = products.find((p) => p.id == req.params.id);
+  const { id } = req.params;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).render("message", {
+      message: "Produto não encontrado.",
+    });
+  }
+
   res.render("product", { product });
 });
 
 app.post("/product", (req, res) => {
   const { name, price } = req.body;
-  const id = products.length;
-  let message = "";
 
+  let message = "";
   const formattedPrice = parseFloat(price);
 
-  if (name.length < 1) {
-    message = "Favor inserir um nome de produto com mais caracteres do que um.";
-    return res.render("message", { message });
+  if (!name || name.trim().length < 1) {
+    message = "Nome do produto inválido.";
+    return res.status(400).render("message", { message });
   }
 
-  if (formattedPrice < 0 || isNaN(formattedPrice)) {
-    message = "Favor inserir um valor de produto maior do que 0.";
-    return res.render("message", { message });
+  if (isNaN(formattedPrice) || formattedPrice <= 0) {
+    message = "Preço deve ser maior que 0.";
+    return res.status(400).render("message", { message });
   }
 
-  products.push({ name, price: formattedPrice, id });
+  const newProduct = {
+    id: Date.now(),
+    name: name.trim(),
+    price: formattedPrice,
+  };
 
-  res.render("products", { products });
+  products.push(newProduct);
+
+  return res.status(201).redirect("/products");
 });
 
 app.delete("/product/:id", (req, res) => {
   const { id } = req.params;
 
-  products = products.filter((product) => product.id != id);
+  const exists = products.some((p) => p.id == id);
 
-  res.render("products", { products });
-});
+  if (!exists) {
+    return res.status(404).render("message", {
+      message: "Produto não encontrado.",
+    });
+  }
 
-// listen method
-app.listen(PORT, () => {
-  console.log("Running server in port " + PORT + ".");
-  console.log("Link: http://localhost:" + PORT);
+  products = products.filter((p) => p.id != id);
+
+  res.redirect("/products");
 });
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
   if (res.headersSent) return next(err);
-  res.status(500).send("Internal Server Error");
+
+  res.status(500).render("message", {
+    message: "Erro interno do servidor.",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Running server on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
 });
