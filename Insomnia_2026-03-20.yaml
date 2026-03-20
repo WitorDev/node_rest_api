@@ -1,0 +1,146 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: api_rest
+meta:
+  id: wrk_7ab4bd7cc6d0440b98877ba1b534ffd2
+  created: 1774027702643
+  modified: 1774027702643
+  description: ""
+collection:
+  - url: http://localhost:3000/api/products
+    name: Get all Products
+    meta:
+      id: req_4f67d2ac9b4f4ed1a12c37aff6c06d75
+      created: 1774027741256
+      modified: 1774028962087
+      isPrivate: false
+      description: ""
+      sortKey: -1774027741256
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:3000/api/products/search?q=a
+    name: Get Product that includes search
+    meta:
+      id: req_2d54c68e379f4e6a9746b64095df33d8
+      created: 1774028570649
+      modified: 1774028953207
+      isPrivate: false
+      description: ""
+      sortKey: -1774028570649
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:3000/api/product/2
+    name: Get Product by ID
+    meta:
+      id: req_02de246431394ffda16933ef4fbc83b7
+      created: 1774028881922
+      modified: 1774028928534
+      isPrivate: false
+      description: ""
+      sortKey: -1774028881922
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:3000/api/product/
+    name: Post Product
+    meta:
+      id: req_79e1cceec0ad497fade18e7febc967cf
+      created: 1774029057757
+      modified: 1774029414611
+      isPrivate: false
+      description: ""
+      sortKey: -1774029057757
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "name": "chinela times",
+            "price": 14021301
+         }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:3000/api/product/4
+    name: Delete Product
+    meta:
+      id: req_eeb5a6ee37d24122be697457940880c0
+      created: 1774029425177
+      modified: 1774029461594
+      isPrivate: false
+      description: ""
+      sortKey: -1774029425177
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_0d33c5421140161b184752d844ca069c18821c41
+    created: 1774027702669
+    modified: 1774027702669
+environments:
+  name: Base Environment
+  meta:
+    id: env_0d33c5421140161b184752d844ca069c18821c41
+    created: 1774027702658
+    modified: 1774027702658
+    isPrivate: false
