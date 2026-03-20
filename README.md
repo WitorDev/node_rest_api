@@ -33,7 +33,7 @@ PORT=3000
 
 ```
 
-node app.js
+node server.js
 
 ```
 
@@ -53,10 +53,10 @@ Products are stored as objects in an array with the following structure:
 
 ```
 
-GET / Home page with products -
-GET /products List all products -
-GET /products/search?q=term Search products by term -
-GET /product/:id Get a specific product by ID -
+GET / Home page with products
+GET /products List all products
+GET /products/search?q=term Search products by term
+GET /product/:id Get a specific product by ID
 POST /product Create a new product { "name": "Mouse", "price": 50 }
 DELETE /product/:id Delete a product -
 
