@@ -53,12 +53,20 @@ Products are stored as objects in an array with the following structure:
 
 ```
 
-GET / Home page with products
-GET /products List all products
-GET /products/search?q=term Search products by term
-GET /product/:id Get a specific product by ID
-POST /product Create a new product { "name": "Mouse", "price": 50 }
-DELETE /product/:id Delete a product -
+GET /api/products List all products
+![alt text](image.png)
+
+GET /api/products/search?q=term Search products by term
+![alt text](image-1.png)
+
+GET /api/product/:id Get a specific product by ID
+![alt text](image-2.png)
+
+POST /api/product Create a new product { "name": "Mouse", "price": 50 }
+![alt text](image-3.png)
+
+DELETE /api/product/:id Delete a product
+![alt text](image-4.png)
 
 ## Validations
 

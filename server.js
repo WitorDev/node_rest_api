@@ -17,10 +17,22 @@ app.get("/", (req, res) => {
   res.render("index", { products, query: "" });
 });
 
+app.get("/api/products", (req, res) => {
+  res.json(products);
+});
 app.get("/products", (req, res) => {
   res.render("products", { products });
 });
 
+app.get("/api/products/search", (req, res) => {
+  const q = req.query.q;
+
+  const results = products.filter((p) =>
+    p.name.toLowerCase().includes(q.toLowerCase()),
+  );
+
+  res.json(results);
+});
 app.get("/products/search", (req, res) => {
   const q = req.query.q;
 
@@ -35,6 +47,19 @@ app.get("/products/search", (req, res) => {
   return res.render("index", { products: results, query: q });
 });
 
+app.get("/api/product/:id", (req, res) => {
+  const { id } = req.params;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).json({
+      message: "Produto não encontrado.",
+    });
+  }
+
+  res.json(product);
+});
 app.get("/product/:id", (req, res) => {
   const { id } = req.params;
 
@@ -49,6 +74,32 @@ app.get("/product/:id", (req, res) => {
   res.render("product", { product });
 });
 
+app.post("/api/product", (req, res) => {
+  const { name, price } = req.body;
+
+  let message = "";
+  const formattedPrice = parseFloat(price);
+
+  if (!name || name.trim().length < 1) {
+    message = "Nome do produto inválido.";
+    return res.status(400).json({ error: message });
+  }
+
+  if (isNaN(formattedPrice) || formattedPrice <= 0) {
+    message = "Preço deve ser maior que 0.";
+    return res.status(400).json({ error: message });
+  }
+
+  const newProduct = {
+    id: products.length + 1,
+    name: name.trim(),
+    price: formattedPrice,
+  };
+
+  products.push(newProduct);
+
+  return res.status(201).json(products);
+});
 app.post("/product", (req, res) => {
   const { name, price } = req.body;
 
@@ -76,6 +127,19 @@ app.post("/product", (req, res) => {
   return res.status(201).redirect("/products");
 });
 
+app.delete("/api/product/:id", (req, res) => {
+  const { id } = req.params;
+
+  const exists = products.some((p) => p.id == id);
+
+  if (!exists) {
+    return res.status(400).json({ error: "Produto não encontrado" });
+  }
+
+  products = products.filter((p) => p.id != id);
+
+  res.json(products);
+});
 app.delete("/product/:id", (req, res) => {
   const { id } = req.params;
 
