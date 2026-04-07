@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 app.get("/api/products", (req, res) => {
   res.json(products);
 });
+
 app.get("/products", (req, res) => {
   res.render("products", { products });
 });
@@ -33,6 +34,7 @@ app.get("/api/products/search", (req, res) => {
 
   res.json(results);
 });
+
 app.get("/products/search", (req, res) => {
   const q = req.query.q;
 
@@ -60,6 +62,7 @@ app.get("/api/product/:id", (req, res) => {
 
   res.json(product);
 });
+
 app.get("/product/:id", (req, res) => {
   const { id } = req.params;
 
@@ -77,17 +80,14 @@ app.get("/product/:id", (req, res) => {
 app.post("/api/product", (req, res) => {
   const { name, price } = req.body;
 
-  let message = "";
   const formattedPrice = parseFloat(price);
 
   if (!name || name.trim().length < 1) {
-    message = "Nome do produto inválido.";
-    return res.status(400).json({ error: message });
+    return res.status(400).json({ error: "Nome do produto inválido." });
   }
 
   if (isNaN(formattedPrice) || formattedPrice <= 0) {
-    message = "Preço deve ser maior que 0.";
-    return res.status(400).json({ error: message });
+    return res.status(400).json({ error: "Preço deve ser maior que 0." });
   }
 
   const newProduct = {
@@ -100,20 +100,22 @@ app.post("/api/product", (req, res) => {
 
   return res.status(201).json(products);
 });
+
 app.post("/product", (req, res) => {
   const { name, price } = req.body;
 
-  let message = "";
   const formattedPrice = parseFloat(price);
 
   if (!name || name.trim().length < 1) {
-    message = "Nome do produto inválido.";
-    return res.status(400).render("message", { message });
+    return res.status(400).render("message", {
+      message: "Nome do produto inválido.",
+    });
   }
 
   if (isNaN(formattedPrice) || formattedPrice <= 0) {
-    message = "Preço deve ser maior que 0.";
-    return res.status(400).render("message", { message });
+    return res.status(400).render("message", {
+      message: "Preço deve ser maior que 0.",
+    });
   }
 
   const newProduct = {
@@ -124,7 +126,131 @@ app.post("/product", (req, res) => {
 
   products.push(newProduct);
 
-  return res.status(201).redirect("/products");
+  return res.redirect("/products");
+});
+
+app.put("/api/product/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).json({ error: "Produto não encontrado." });
+  }
+
+  const formattedPrice = parseFloat(price);
+
+  if (!name || name.trim().length < 1) {
+    return res.status(400).json({ error: "Nome do produto inválido." });
+  }
+
+  if (isNaN(formattedPrice) || formattedPrice <= 0) {
+    return res.status(400).json({ error: "Preço deve ser maior que 0." });
+  }
+
+  product.name = name.trim();
+  product.price = formattedPrice;
+
+  res.json(product);
+});
+
+app.patch("/api/product/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).json({ error: "Produto não encontrado." });
+  }
+
+  if (name !== undefined) {
+    if (!name || name.trim().length < 1) {
+      return res.status(400).json({ error: "Nome do produto inválido." });
+    }
+    product.name = name.trim();
+  }
+
+  if (price !== undefined) {
+    const formattedPrice = parseFloat(price);
+
+    if (isNaN(formattedPrice) || formattedPrice <= 0) {
+      return res.status(400).json({ error: "Preço deve ser maior que 0." });
+    }
+
+    product.price = formattedPrice;
+  }
+
+  res.json(product);
+});
+
+app.put("/product/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).render("message", {
+      message: "Produto não encontrado.",
+    });
+  }
+
+  const formattedPrice = parseFloat(price);
+
+  if (!name || name.trim().length < 1) {
+    return res.status(400).render("message", {
+      message: "Nome do produto inválido.",
+    });
+  }
+
+  if (isNaN(formattedPrice) || formattedPrice <= 0) {
+    return res.status(400).render("message", {
+      message: "Preço deve ser maior que 0.",
+    });
+  }
+
+  product.name = name.trim();
+  product.price = formattedPrice;
+
+  res.redirect(`/product/${id}`);
+});
+
+app.patch("/product/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+
+  const product = products.find((p) => p.id == id);
+
+  if (!product) {
+    return res.status(404).render("message", {
+      message: "Produto não encontrado.",
+    });
+  }
+
+  if (name !== undefined) {
+    if (!name || name.trim().length < 1) {
+      return res.status(400).render("message", {
+        message: "Nome do produto inválido.",
+      });
+    }
+    product.name = name.trim();
+  }
+
+  if (price !== undefined) {
+    const formattedPrice = parseFloat(price);
+
+    if (isNaN(formattedPrice) || formattedPrice <= 0) {
+      return res.status(400).render("message", {
+        message: "Preço deve ser maior que 0.",
+      });
+    }
+
+    product.price = formattedPrice;
+  }
+
+  res.redirect(`/product/${id}`);
 });
 
 app.delete("/api/product/:id", (req, res) => {
@@ -140,6 +266,7 @@ app.delete("/api/product/:id", (req, res) => {
 
   res.json(products);
 });
+
 app.delete("/product/:id", (req, res) => {
   const { id } = req.params;
 

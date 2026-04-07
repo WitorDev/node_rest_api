@@ -4,82 +4,98 @@ A simple Product CRUD API built with Node.js, Express, and Server-Side Rendering
 
 ## 🚀 Technologies
 
-- **Node.js**
-- **Express**
-- **EJS** (Embedded JavaScript templating)
-- **Method-Override** (For PUT, PATCH, and DELETE requests from HTML forms)
-- **Dotenv** (Environment variable management)
-
----
+- Node.js
+- Express
+- EJS
+- Method-Override
+- Dotenv
 
 ## 🛠️ How to Run
-
-1. Clone the repository.
-2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Create a .env file in the root directory and define the port:
-
 ```
-
 PORT=3000
-
 ```
 
-4. Run the application:
-
-```
-
+```bash
 node server.js
-
 ```
 
-5. Access the app in your browser at: http://localhost:3000
+Open http://localhost:3000
 
 ## 📦 Data Structure
 
-Products are stored as objects in an array with the following structure:
-
+```json
+{
+  "id": 1,
+  "name": "Product Name",
+  "price": 10.5
+}
 ```
 
+## 🔌 API Endpoints
+
+### Get all products
+
+GET /api/products
+
+### Search products
+
+GET /api/products/search?q=term
+
+### Get product by ID
+
+GET /api/product/:id
+
+### Create product
+
+POST /api/product
 {
-"id": 123456,
-"name": "Product Name",
-"price": 10.50
+"name": "Mouse",
+"price": 50
 }
 
-```
+### Update product (full)
 
-GET /api/products List all products
-![alt text](image.png)
+PUT /api/product/:id
+{
+"name": "New Name",
+"price": 100
+}
 
-GET /api/products/search?q=term Search products by term
-![alt text](image-1.png)
+### Update product (partial)
 
-GET /api/product/:id Get a specific product by ID
-![alt text](image-2.png)
+PATCH /api/product/:id
+{
+"name": "Only Name"
+}
 
-POST /api/product Create a new product { "name": "Mouse", "price": 50 }
-![alt text](image-3.png)
+### Delete product
 
-DELETE /api/product/:id Delete a product
-![alt text](image-4.png)
+DELETE /api/product/:id
 
-## Validations
+## 🌐 Web (SSR) Routes
 
-1. Name: Must not be empty.
+GET /
+GET /products
+GET /product/:id
+POST /product
+PUT /product/:id
+PATCH /product/:id
+DELETE /product/:id
 
-2. Price: Must be a valid number greater than 0.
+## ✅ Validations
 
-3. ID: Must exist in the database for PUT, PATCH, and DELETE operations.
+- Name: required
+- Price: number > 0
+- ID must exist
 
-# Notes
+## ⚠️ Notes
 
-1. ID Generation: Unique IDs are automatically generated using Date.now().
-
-2. Storage: Data is stored in memory. Any changes will be lost when the server restarts.
-
-3. Views: Uses Server-Side Rendering (SSR) to serve EJS templates.
+- In-memory storage
+- ID based on array length
+- Method override required for forms
+- SSR with EJS
